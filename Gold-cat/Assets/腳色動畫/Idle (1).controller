@@ -81,10 +81,7 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: hurt
-    m_EventTreshold: 0
+  m_Conditions: []
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 0}
   m_Solo: 0
@@ -94,7 +91,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0.7
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -161,7 +158,7 @@ AnimatorStateTransition:
     m_ConditionEvent: jump
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: RUN
+    m_ConditionEvent: run
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2979428230720319157}
@@ -192,7 +189,7 @@ AnimatorStateTransition:
     m_ConditionEvent: walk
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: RUN
+    m_ConditionEvent: run
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: idel
@@ -220,7 +217,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: RUN
+    m_ConditionEvent: run
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1269842916601718886}
@@ -319,7 +316,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: RUN
+    m_ConditionEvent: run
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: walk
@@ -478,7 +475,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: RUN
+    m_ConditionEvent: run
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: walk
@@ -524,7 +521,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: RUN
+  - m_Name: run
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -593,13 +590,13 @@ AnimatorStateMachine:
     m_Position: {x: 380, y: -740, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -559573552426013365}
-    m_Position: {x: 370, y: -400, z: 0}
+    m_Position: {x: 400, y: -430, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5835266775353973077}
     m_Position: {x: 200, y: -200, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7045392329248431427}
-    m_Position: {x: 30, y: -400, z: 0}
+    m_Position: {x: 0, y: -430, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2415484448017741634}
     m_Position: {x: 200, y: -840, z: 0}
@@ -608,7 +605,7 @@ AnimatorStateMachine:
     m_Position: {x: 350, y: -640, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4397163319878443694}
-    m_Position: {x: 200, y: -440, z: 0}
+    m_Position: {x: 200, y: -470, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -4164526415384372181}
@@ -618,9 +615,9 @@ AnimatorStateMachine:
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: 220, y: -330, z: 0}
+  m_AnyStatePosition: {x: 220, y: -350, z: 0}
   m_EntryPosition: {x: 220, y: -1030, z: 0}
-  m_ExitPosition: {x: 220, y: -500, z: 0}
+  m_ExitPosition: {x: 220, y: -570, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 2984324695346455522}
 --- !u!1102 &1269842916601718886
@@ -686,7 +683,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: RUN
+    m_ConditionEvent: run
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2979428230720319157}
@@ -714,7 +711,7 @@ AnimatorStateTransition:
     m_ConditionEvent: jump
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: RUN
+    m_ConditionEvent: run
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: walk
@@ -826,7 +823,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: RUN
+    m_ConditionEvent: run
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2979428230720319157}
@@ -950,10 +947,7 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: fall
-    m_EventTreshold: 0
+  m_Conditions: []
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 0}
   m_Solo: 0
@@ -963,7 +957,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0.625
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1

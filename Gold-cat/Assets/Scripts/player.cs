@@ -38,7 +38,7 @@ public class player : MonoBehaviour
     public int coin;
     [Header("音效")]
     public AudioClip coin_sound;
-    [Header("速度"), Tooltip("腳色的移動速度"), Range(10, 1500)]
+    [Header("速度"), Tooltip("腳色的移動速度"), Range(1, 1500)]
     public float movement_speed = 50;
     [Header("音效")]
     public AudioClip jump_sound;
@@ -54,9 +54,18 @@ public class player : MonoBehaviour
     public float slide_speed;
     [Header("滑行持續時間"), Tooltip("腳色的滑行時間")]
     public float slide_time;
-    [Header("腳色死亡"),Tooltip("True 死亡,False 未死亡")]
+    [Header("腳色死亡"), Tooltip("True 死亡,False 未死亡")]
     public bool character_dead;
-
+    [Header("動畫控制器")]
+    public Animator ani;
+    [Header("膠囊碰撞器")]
+    public CapsuleCollider2D cc2d;
+    [Header("剛體")]
+    public Rigidbody2D rig;
+    /// <summary>
+    /// 是否在地板上
+    /// </summary>
+    public bool isGround;
     #endregion
 
     #region 方法區域
@@ -67,24 +76,71 @@ public class player : MonoBehaviour
     // API - 功能倉庫
     // 輸出功能 print("字串")
 
+    private void Move()
+    {
+        // 如果 剛體.加速度.大小 小於5
+        if (rig.velocity.magnitude < 5)
+        {
+            // 剛體.添加推力 二為向量
+            rig.AddForce(new Vector2(movement_speed, 0));
+        }
+        
+    }
+
     /// <summary>
     /// 腳色跳躍功能:跳躍動畫,播放音效
     /// </summary>
     private void Jump()
     {
-        print("跳躍");
+        bool jump = Input.GetKey(KeyCode.Space);
+
+        // 顛倒速算子
+        // 作用:將布林值變成相反
+        // !true ----- false
+
+        // 動畫控制器代號
+        ani.SetBool("jump", jump);
+
+        // 搬家 Alt+上,下
+        // 格式化 Ctrl+K,D
+
+        // 如果在地板上
+        if (isGround)
+        {
+            if (jump)
+            {
+                isGround = false;                            // 不在地板上
+                rig.AddForce(new Vector2(0, Jump_height));   // 剛體 添加推力(二為向量)
+            }
+        }
+
     }
     /// <summary>
     /// 腳色滑行功能:滑行動畫,撥放音效,縮小碰撞範圍
     /// </summary>
     private void Slide()
     {
-        print("滑行");
+        bool slide = Input.GetKey(KeyCode.X);
+
+        // 動畫控制器代號
+        ani.SetBool("slide", slide);
+
+        if (slide)  // 如果按下 X 縮小
+        {
+            cc2d.offset = new Vector2(-0.19f, -1f);  // 位移
+            cc2d.size = new Vector2(2.4f, 2f);       // 尺寸
+        }
+        // 否則恢復
+        else
+        {
+            cc2d.offset = new Vector2(-0.19f, -0.25f);  // 位移
+            cc2d.size = new Vector2(2.4f, 4f);       // 尺寸
+        }
     }
     /// <summary>
     /// 碰撞障礙時受傷:扣血
     /// </summary>
-    private void Hit()
+    private void Hurt()
     {
 
     }
@@ -93,7 +149,7 @@ public class player : MonoBehaviour
     /// </summary>
     private void EatCoin()
     {
-    
+
     }
     /// <summary>
     /// 死亡:動畫,遊戲結束
@@ -119,6 +175,31 @@ public class player : MonoBehaviour
     private void Update()
     {
         Slide();
+        Jump();
+        Move();
+    }
+
+    /// <summary>
+    /// 固定更新事件:一秒固定執行50次,只要有剛體就寫在這
+    /// </summary>
+    private void FixedUpdate()
+    {
+        Jump();
+        Move();
+    }
+    /// <summary>
+    /// 碰撞事件:碰到物件開始執行一次
+    /// </summary>
+    /// <param name="collision">碰到物件的碰撞資訊</param>
+    private void OnCollisionEnter2D(Collision2D collision)
+
+    {
+        // 如果 碰到物件 的名稱=地板
+        if (collision.gameObject.name == "空中地板")
+        {
+            // 是否在地上 = 是
+            isGround = true;
+        }
     }
     #endregion
 }
