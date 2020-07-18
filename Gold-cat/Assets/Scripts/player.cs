@@ -67,6 +67,13 @@ public class player : MonoBehaviour
     public Image imghp;
     [Header("音效來源")]
     public AudioSource aud;
+    [Header("結束畫面")]
+    public GameObject final;
+    [Header("標題")]
+    public Text textTitle;
+    [Header("本次的金幣數量")]
+    public Text textCurrent;
+
 
     private float hpMax;
 
@@ -125,6 +132,7 @@ public class player : MonoBehaviour
                 aud.PlayOneShot(Jump_sound);
             }
         }
+        
 
     }
     /// <summary>
@@ -137,11 +145,13 @@ public class player : MonoBehaviour
         // 動畫控制器代號
         ani.SetBool("slide", slide);
 
+        // 如果 按下 X 播放一次音效
+        if (Input.GetKeyDown(KeyCode.X)) aud.PlayOneShot(Slide_sound);
+
         if (slide)  // 如果按下 X 縮小
         {
             cc2d.offset = new Vector2(-0.19f, -1f);  // 位移
             cc2d.size = new Vector2(2.4f, 2f);       // 尺寸
-            aud.PlayOneShot(Slide_sound);
         }
         // 否則恢復
         else
@@ -159,6 +169,11 @@ public class player : MonoBehaviour
 
         imghp.fillAmount = health / hpMax;      //血量.填滿長度 = 血量/血量最大值
         aud.PlayOneShot(Hurt_sound);
+
+        if (health <= 0)                        // 如果血量<=0 死亡
+        {
+            Dead();
+        }
     }
     /// <summary>
     /// 吃金幣:金幣數量增加,介面更新,金幣音效
@@ -176,7 +191,27 @@ public class player : MonoBehaviour
     /// </summary>
     private void Dead()
     {
+        if (character_dead) return;                       // 如果 死亡 就 跳出
 
+        character_dead = true;
+        ani.SetTrigger("dead");                           // 死亡觸發
+        final.SetActive(true);                            // 結束畫面.啟動設定(是)
+        textTitle.text = "YOU SUCK!";
+        textCurrent.text = "COIN GET:" + coin;
+        movement_speed = 0;
+        rig.velocity = Vector3.zero;
+    }
+
+    /// <summary>
+    /// 過關
+    /// </summary>
+    private void Pass()
+    {
+        final.SetActive(true);
+        textTitle.text = "STILL SUCK";
+        textCurrent.text = "COIN GET:" + coin;
+        movement_speed = 0;
+        rig.velocity = Vector3.zero;
     }
     #endregion
 
@@ -195,9 +230,13 @@ public class player : MonoBehaviour
     // 移動,監聽玩家鍵盤,滑鼠與觸控
     private void Update()
     {
+        if (character_dead) return;                       // 如果 死亡 就 跳出
+
         Slide();
         Jump();
         Move();
+
+        if (transform.position.y <= -6) Dead(); // 如果Y點 <=6 死亡
     }
 
     /// <summary>
@@ -205,6 +244,8 @@ public class player : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+        if (character_dead) return;
+
         Jump();
         Move();
     }
@@ -242,6 +283,10 @@ public class player : MonoBehaviour
         {
             Hurt();
         }
+
+        if (collision.name == "傳送門")
+            Pass();
+
     }
     #endregion
 }
