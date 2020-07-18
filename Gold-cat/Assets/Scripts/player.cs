@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.AI;
 
 public class player : MonoBehaviour
 {
@@ -36,20 +38,19 @@ public class player : MonoBehaviour
     public float health = 100;
     [Header("金幣數量"), Tooltip("儲存腳色金幣數量")]
     public int coin;
-    [Header("音效")]
+    [Header("音效區域")]
     public AudioClip coin_sound;
+    public AudioClip Jump_sound;
+    public AudioClip Slide_sound;
+    public AudioClip Hurt_sound;
     [Header("速度"), Tooltip("腳色的移動速度"), Range(1, 1500)]
     public float movement_speed = 50;
-    [Header("音效")]
-    public AudioClip jump_sound;
     [Header("跳躍高度"), Tooltip("腳色的跳躍高度")]
     public float Jump_height = 100;
     [Header("跳躍移動速度"), Tooltip("腳色的跳躍速度")]
     public float Jump_movement;
     [Header("跳躍移動時間"), Tooltip("腳色的跳躍時間")]
     public float Jump_time;
-    [Header("音效")]
-    public AudioClip slide_sound;
     [Header("滑行速度"), Tooltip("腳色的滑行速度")]
     public float slide_speed;
     [Header("滑行持續時間"), Tooltip("腳色的滑行時間")]
@@ -62,11 +63,21 @@ public class player : MonoBehaviour
     public CapsuleCollider2D cc2d;
     [Header("剛體")]
     public Rigidbody2D rig;
+    [Header("血條")]
+    public Image imghp;
+    [Header("音效來源")]
+    public AudioSource aud;
+
+    private float hpMax;
+
     /// <summary>
     /// 是否在地板上
     /// </summary>
     public bool isGround;
     #endregion
+
+    [Header("金幣文字")]
+    public Text textCoin;
 
     #region 方法區域
     // C# 括號服後都是成對出現的:() [] {} "" ''
@@ -111,6 +122,7 @@ public class player : MonoBehaviour
             {
                 isGround = false;                            // 不在地板上
                 rig.AddForce(new Vector2(0, Jump_height));   // 剛體 添加推力(二為向量)
+                aud.PlayOneShot(Jump_sound);
             }
         }
 
@@ -129,6 +141,7 @@ public class player : MonoBehaviour
         {
             cc2d.offset = new Vector2(-0.19f, -1f);  // 位移
             cc2d.size = new Vector2(2.4f, 2f);       // 尺寸
+            aud.PlayOneShot(Slide_sound);
         }
         // 否則恢復
         else
@@ -142,15 +155,22 @@ public class player : MonoBehaviour
     /// </summary>
     private void Hurt()
     {
+        health -= 20;                            // 血量降低20
 
+        imghp.fillAmount = health / hpMax;      //血量.填滿長度 = 血量/血量最大值
+        aud.PlayOneShot(Hurt_sound);
     }
     /// <summary>
     /// 吃金幣:金幣數量增加,介面更新,金幣音效
     /// </summary>
-    private void EatCoin()
+    private void EatCoin(Collider2D collision)
     {
-
+        coin++;                           // 金幣數量遞增1
+        Destroy(collision.gameObject);    // 刪除(碰到物件.遊戲物件)
+        textCoin.text = "COIN:" + coin;   // 文字介面.文字 =
+        aud.PlayOneShot(coin_sound);
     }
+
     /// <summary>
     /// 死亡:動畫,遊戲結束
     /// </summary>
@@ -168,6 +188,7 @@ public class player : MonoBehaviour
     {
         // 呼叫跳耀方法
         Jump();
+        hpMax = health;     // 血量最大值=血量
     }
     // 更新 Update
     // 播放遊戲後一秒直行約60次 - 60FPS
@@ -189,16 +210,37 @@ public class player : MonoBehaviour
     }
     /// <summary>
     /// 碰撞事件:碰到物件開始執行一次
+    /// 碰到有碰撞器的物件執行
+    ///  沒有勾選 Is Trigger
     /// </summary>
     /// <param name="collision">碰到物件的碰撞資訊</param>
     private void OnCollisionEnter2D(Collision2D collision)
 
     {
-        // 如果 碰到物件 的名稱=地板
-        if (collision.gameObject.name == "空中地板")
+        // 如果 碰到物件 的名稱 = 地板
+        // 如果 碰到物件 的 名稱 = "懸浮地板" 並且 玩家的 Y > 地板的 Y
+        // if (collision.gameObject.name == "空中地板" && transform.position.y + 1 > collision.gameObject.transform.position.y)
+        if (collision.gameObject.name == "空中地板") 
         {
             // 是否在地上 = 是
             isGround = true;
+        }
+    }
+
+    /// <summary>
+    /// 觸發事件:碰到勾選 Is Trigger 的物件執行一次
+    /// </summary>
+    /// <param name="collision"></param>
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "金幣")          // 如果 碰到物件.標籤 == "金幣"
+        {
+            EatCoin(collision);               // 呼叫吃金幣方法(金幣碰撞)
+        }
+
+        if (collision.tag == "障礙物")
+        {
+            Hurt();
         }
     }
     #endregion
