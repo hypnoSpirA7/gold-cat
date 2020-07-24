@@ -165,7 +165,7 @@ public class player : MonoBehaviour
     /// </summary>
     private void Hurt()
     {
-        health -= 20;                            // 血量降低20
+        health -= 40;                            // 血量降低40
 
         imghp.fillAmount = health / hpMax;      //血量.填滿長度 = 血量/血量最大值
         aud.PlayOneShot(Hurt_sound);
